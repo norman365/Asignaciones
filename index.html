@@ -301,7 +301,7 @@
 <body>
   <header>
     <h1>Asignación Digital</h1>
-    <p>Completá los datos, revisá la vista previa y guardá la imagen para enviarla por WhatsApp.</p>
+   
   </header>
 
   <main>
@@ -364,8 +364,7 @@
           <button type="button" class="secondary" id="btnLimpiar">Limpiar formulario</button>
         </div>
 
-        <p class="help">En celular, el botón Compartir intenta abrir el menú nativo para enviar la imagen por WhatsApp. Si no aparece, usá Finalizar para descargar el PNG y luego adjuntalo desde WhatsApp.</p>
-      </form>
+         </form>
     </section>
 
     <section class="panel preview-panel" aria-label="Vista previa de la imagen generada">
@@ -603,7 +602,7 @@
 
       drawLabelLine("Nombre:", d.nombre || "Nombre Apellido", 250, 350, 980, 365);
       drawLabelLine("Ayudante:", d.ayudante, 355, 350, 980, 365);
-      drawLabelLine("Fecha:", d.fecha || obtenerProximosJueves(1)[0], 460, 260, 980, 270, 34);
+      drawLabelLine("Fecha:", d.fecha || obtenerProximosJueves(1)[0], 460, 260, 980, 270, 50);
       drawLabelLine("Intervención núm.:", d.intervencion || "6", 565, 555, 980, 570);
 
       ctx.save();
@@ -648,7 +647,6 @@
       ctx.save();
       ctx.font = font(31, 400, "Arial, Helvetica, sans-serif");
       ctx.fillStyle = "#6b6b6b";
-      ctx.fillText("S-89-S   11/23", 95, 1388);
       ctx.textAlign = "right";
       ctx.fillStyle = "#111";
       ctx.fillText("Generado digitalmente", 980, 1388);
