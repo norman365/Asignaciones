@@ -1,0 +1,748 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+  <meta name="theme-color" content="#111827" />
+  <title>Asignación Digital</title>
+  <style>
+    :root {
+      --bg: #f3f4f6;
+      --card: #ffffff;
+      --text: #1f2937;
+      --muted: #6b7280;
+      --line: #d1d5db;
+      --primary: #111827;
+      --primary-2: #374151;
+      --accent: #2563eb;
+      --danger: #dc2626;
+      --radius: 18px;
+      --shadow: 0 12px 30px rgba(15, 23, 42, .12);
+    }
+
+    * { box-sizing: border-box; }
+
+    body {
+      margin: 0;
+      font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      background: linear-gradient(180deg, #e5e7eb 0%, var(--bg) 35%, #fff 100%);
+      color: var(--text);
+      min-height: 100vh;
+    }
+
+    header {
+      padding: 18px 16px 8px;
+      text-align: center;
+    }
+
+    header h1 {
+      margin: 0;
+      font-size: clamp(1.35rem, 5vw, 2.1rem);
+      letter-spacing: -.03em;
+      color: #111827;
+    }
+
+    header p {
+      margin: 8px auto 0;
+      max-width: 680px;
+      color: var(--muted);
+      font-size: .97rem;
+      line-height: 1.35;
+    }
+
+    main {
+      width: min(1120px, 100%);
+      margin: 0 auto;
+      padding: 12px 12px 30px;
+      display: grid;
+      grid-template-columns: 420px 1fr;
+      gap: 18px;
+      align-items: start;
+    }
+
+    .panel {
+      background: var(--card);
+      border: 1px solid rgba(209, 213, 219, .85);
+      border-radius: var(--radius);
+      box-shadow: var(--shadow);
+      overflow: hidden;
+    }
+
+    .form-panel { position: sticky; top: 12px; }
+
+    .panel-title {
+      padding: 16px 16px 12px;
+      border-bottom: 1px solid #eef0f3;
+    }
+
+    .panel-title h2 {
+      margin: 0;
+      font-size: 1.05rem;
+      color: #111827;
+    }
+
+    .form-body {
+      padding: 14px 16px 16px;
+      display: grid;
+      gap: 14px;
+    }
+
+    label, legend {
+      display: block;
+      font-weight: 750;
+      font-size: .92rem;
+      margin-bottom: 7px;
+      color: #111827;
+    }
+
+    .optional {
+      color: var(--muted);
+      font-weight: 600;
+      font-size: .82rem;
+    }
+
+    input[type="text"], select, textarea {
+      width: 100%;
+      border: 1px solid var(--line);
+      border-radius: 12px;
+      padding: 13px 12px;
+      font-size: 1rem;
+      background: #fff;
+      color: #111827;
+      outline: none;
+      transition: border .15s, box-shadow .15s;
+    }
+
+    input[type="text"]:focus, select:focus, textarea:focus {
+      border-color: #93c5fd;
+      box-shadow: 0 0 0 4px rgba(59, 130, 246, .14);
+    }
+
+    fieldset {
+      border: 0;
+      padding: 0;
+      margin: 0;
+    }
+
+    .checks {
+      display: grid;
+      gap: 9px;
+    }
+
+    .check-row {
+      min-height: 46px;
+      display: grid;
+      grid-template-columns: 24px 1fr;
+      align-items: center;
+      gap: 10px;
+      padding: 10px 12px;
+      border: 1px solid #e5e7eb;
+      border-radius: 12px;
+      background: #fafafa;
+      cursor: pointer;
+      user-select: none;
+    }
+
+    .check-row input {
+      width: 20px;
+      height: 20px;
+      accent-color: var(--primary);
+      margin: 0;
+    }
+
+    .check-row span {
+      font-size: 1rem;
+      color: #111827;
+    }
+
+    .date-tools {
+      display: flex;
+      gap: 8px;
+      margin-top: 8px;
+      align-items: center;
+    }
+
+    .mini-button {
+      border: 1px solid var(--line);
+      background: #fff;
+      border-radius: 10px;
+      padding: 9px 10px;
+      font-weight: 700;
+      color: #374151;
+      cursor: pointer;
+    }
+
+    .date-config {
+      display: none;
+      margin-top: 9px;
+    }
+
+    .date-config.is-open { display: block; }
+
+    .date-config small {
+      display: block;
+      color: var(--muted);
+      line-height: 1.35;
+      margin-top: 6px;
+    }
+
+    .error {
+      display: none;
+      color: var(--danger);
+      background: #fee2e2;
+      border: 1px solid #fecaca;
+      border-radius: 12px;
+      padding: 10px 12px;
+      font-size: .93rem;
+    }
+
+    .error.is-visible { display: block; }
+
+    .actions {
+      display: grid;
+      gap: 10px;
+      margin-top: 4px;
+    }
+
+    button.primary, button.secondary, button.whatsapp {
+      border: 0;
+      border-radius: 14px;
+      padding: 14px 14px;
+      font-size: 1rem;
+      font-weight: 800;
+      cursor: pointer;
+      min-height: 50px;
+    }
+
+    button.primary {
+      color: #fff;
+      background: var(--primary);
+    }
+
+    button.primary:active { background: var(--primary-2); }
+
+    button.secondary {
+      color: #111827;
+      background: #e5e7eb;
+    }
+
+    button.whatsapp {
+      color: #fff;
+      background: #16a34a;
+    }
+
+    .help {
+      color: var(--muted);
+      font-size: .88rem;
+      line-height: 1.4;
+      margin: 0;
+    }
+
+    .preview-panel {
+      padding: 14px;
+    }
+
+    .canvas-wrap {
+      width: 100%;
+      overflow: auto;
+      display: flex;
+      justify-content: center;
+      background: #e5e7eb;
+      border-radius: 14px;
+      padding: 12px;
+    }
+
+    canvas {
+      width: min(100%, 540px);
+      height: auto;
+      display: block;
+      background: #fff;
+      border-radius: 6px;
+      box-shadow: 0 8px 20px rgba(0,0,0,.14);
+    }
+
+    .toast {
+      position: fixed;
+      left: 12px;
+      right: 12px;
+      bottom: 14px;
+      z-index: 10;
+      display: none;
+      max-width: 580px;
+      margin: 0 auto;
+      background: #111827;
+      color: #fff;
+      border-radius: 14px;
+      padding: 13px 15px;
+      box-shadow: 0 12px 30px rgba(0,0,0,.22);
+      font-size: .95rem;
+      line-height: 1.35;
+    }
+
+    .toast.is-visible { display: block; }
+
+    @media (max-width: 900px) {
+      main { grid-template-columns: 1fr; }
+      .form-panel { position: static; }
+      .preview-panel { padding: 10px; }
+      .canvas-wrap { padding: 8px; }
+    }
+
+    @media (max-width: 520px) {
+      header { padding-top: 14px; }
+      main { padding-left: 8px; padding-right: 8px; gap: 12px; }
+      .panel { border-radius: 16px; }
+      .form-body { padding: 12px; gap: 12px; }
+      input[type="text"], select { min-height: 48px; }
+      .actions { position: sticky; bottom: 0; background: #fff; padding-top: 8px; }
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <h1>Asignación Digital</h1>
+    <p>Completá los datos, revisá la vista previa y guardá la imagen para enviarla por WhatsApp.</p>
+  </header>
+
+  <main>
+    <section class="panel form-panel" aria-label="Formulario de asignación">
+      <div class="panel-title">
+        <h2>Datos de la asignación</h2>
+      </div>
+
+      <form id="formAsignacion" class="form-body" autocomplete="off">
+        <div>
+          <label for="nombre">Nombre</label>
+          <input id="nombre" name="nombre" type="text" placeholder="Ej: Norman Contreras" required />
+        </div>
+
+        <div>
+          <label for="ayudante">Ayudante <span class="optional">(opcional)</span></label>
+          <input id="ayudante" name="ayudante" type="text" placeholder="Dejar vacío si no aplica" />
+        </div>
+
+        <div>
+          <label for="fecha">Fecha</label>
+          <select id="fecha" name="fecha" required></select>
+          <p class="help" style="margin-top:8px;">La lista muestra automáticamente los próximos 10 jueves desde la fecha actual.</p>
+        </div>
+
+        <div>
+          <label for="intervencion">Intervención número</label>
+          <select id="intervencion" name="intervencion" required>
+            <option value="3">3</option>
+            <option value="4">4</option>
+            <option value="5">5</option>
+            <option value="6">6</option>
+            <option value="7">7</option>
+          </select>
+        </div>
+
+        <fieldset>
+          <legend>Se presentará en</legend>
+          <div class="checks" id="salas">
+            <label class="check-row">
+              <input type="radio" name="sala" value="principal" checked />
+              <span>Sala principal</span>
+            </label>
+            <label class="check-row">
+              <input type="radio" name="sala" value="aux1" />
+              <span>Sala auxiliar núm. 1</span>
+            </label>
+            <label class="check-row">
+              <input type="radio" name="sala" value="aux2" />
+              <span>Sala auxiliar núm. 2</span>
+            </label>
+          </div>
+        </fieldset>
+
+        <div class="error" id="errorBox"></div>
+
+        <div class="actions">
+          <button type="button" class="primary" id="btnFinalizar">Finalizar y guardar imagen</button>
+          <button type="button" class="whatsapp" id="btnCompartir">Compartir imagen</button>
+          <button type="button" class="secondary" id="btnLimpiar">Limpiar formulario</button>
+        </div>
+
+        <p class="help">En celular, el botón Compartir intenta abrir el menú nativo para enviar la imagen por WhatsApp. Si no aparece, usá Finalizar para descargar el PNG y luego adjuntalo desde WhatsApp.</p>
+      </form>
+    </section>
+
+    <section class="panel preview-panel" aria-label="Vista previa de la imagen generada">
+      <div class="canvas-wrap">
+        <canvas id="canvasAsignacion" width="1080" height="1500"></canvas>
+      </div>
+    </section>
+  </main>
+
+  <div class="toast" id="toast" role="status" aria-live="polite"></div>
+
+  <script>
+    const form = document.getElementById("formAsignacion");
+    const canvas = document.getElementById("canvasAsignacion");
+    const ctx = canvas.getContext("2d");
+    const nombre = document.getElementById("nombre");
+    const ayudante = document.getElementById("ayudante");
+    const fecha = document.getElementById("fecha");
+    const intervencion = document.getElementById("intervencion");
+    const errorBox = document.getElementById("errorBox");
+    const toast = document.getElementById("toast");
+
+    const DIAS = ["Domingo", "Lunes", "Martes", "Miércoles", "Jueves", "Viernes", "Sábado"];
+    const MESES = ["Enero", "Febrero", "Marzo", "Abril", "Mayo", "Junio", "Julio", "Agosto", "Septiembre", "Octubre", "Noviembre", "Diciembre"];
+
+    function pad2(n) {
+      return String(n).padStart(2, "0");
+    }
+
+    function formatearFechaLarga(date) {
+      return `${DIAS[date.getDay()]} ${pad2(date.getDate())} de ${MESES[date.getMonth()]} ${date.getFullYear()}`;
+    }
+
+    function obtenerProximosJueves(cantidad = 10) {
+      const hoy = new Date();
+      hoy.setHours(0, 0, 0, 0);
+
+      const jueves = 4; // 0=Domingo ... 4=Jueves
+      let diasHastaJueves = (jueves - hoy.getDay() + 7) % 7;
+      if (diasHastaJueves === 0) diasHastaJueves = 7; // siguientes, no incluye hoy
+
+      const primerJueves = new Date(hoy);
+      primerJueves.setDate(hoy.getDate() + diasHastaJueves);
+
+      const fechas = [];
+      for (let i = 0; i < cantidad; i++) {
+        const d = new Date(primerJueves);
+        d.setDate(primerJueves.getDate() + (i * 7));
+        fechas.push(formatearFechaLarga(d));
+      }
+      return fechas;
+    }
+
+    function renderFechas(selectedValue) {
+      const fechas = obtenerProximosJueves(10);
+      fecha.innerHTML = "";
+      fechas.forEach(f => {
+        const option = document.createElement("option");
+        option.value = f;
+        option.textContent = f;
+        fecha.appendChild(option);
+      });
+      if (selectedValue && fechas.includes(selectedValue)) {
+        fecha.value = selectedValue;
+      }
+    }
+
+    function mostrarToast(mensaje) {
+      toast.textContent = mensaje;
+      toast.classList.add("is-visible");
+      clearTimeout(mostrarToast.timer);
+      mostrarToast.timer = setTimeout(() => toast.classList.remove("is-visible"), 4200);
+    }
+
+    function mostrarError(mensaje) {
+      if (!mensaje) {
+        errorBox.textContent = "";
+        errorBox.classList.remove("is-visible");
+        return;
+      }
+      errorBox.textContent = mensaje;
+      errorBox.classList.add("is-visible");
+    }
+
+    function dataFormulario() {
+      const salaSeleccionada = document.querySelector('input[name="sala"]:checked');
+      return {
+        nombre: nombre.value.trim(),
+        ayudante: ayudante.value.trim(),
+        fecha: fecha.value,
+        intervencion: intervencion.value,
+        sala: salaSeleccionada ? salaSeleccionada.value : ""
+      };
+    }
+
+    function validar() {
+      const d = dataFormulario();
+      if (!d.nombre) return "Completá el nombre.";
+      if (!d.fecha) return "Seleccioná una fecha.";
+      if (!d.intervencion) return "Seleccioná el número de intervención.";
+      if (!d.sala) return "Elegí una sola sala.";
+      return "";
+    }
+
+    function limpiarCanvas() {
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
+      ctx.fillStyle = "#f6f3e8";
+      ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+      const grd = ctx.createLinearGradient(0, 0, 0, canvas.height);
+      grd.addColorStop(0, "#fffdf2");
+      grd.addColorStop(1, "#f8f1dd");
+      ctx.fillStyle = grd;
+      roundRect(ctx, 45, 35, 990, 1430, 14, true, false);
+
+      ctx.strokeStyle = "rgba(0,0,0,.08)";
+      ctx.lineWidth = 2;
+      roundRect(ctx, 45, 35, 990, 1430, 14, false, true);
+    }
+
+    function roundRect(context, x, y, w, h, r, fill, stroke) {
+      if (typeof r === "number") r = { tl: r, tr: r, br: r, bl: r };
+      context.beginPath();
+      context.moveTo(x + r.tl, y);
+      context.lineTo(x + w - r.tr, y);
+      context.quadraticCurveTo(x + w, y, x + w, y + r.tr);
+      context.lineTo(x + w, y + h - r.br);
+      context.quadraticCurveTo(x + w, y + h, x + w - r.br, y + h);
+      context.lineTo(x + r.bl, y + h);
+      context.quadraticCurveTo(x, y + h, x, y + h - r.bl);
+      context.lineTo(x, y + r.tl);
+      context.quadraticCurveTo(x, y, x + r.tl, y);
+      context.closePath();
+      if (fill) context.fill();
+      if (stroke) context.stroke();
+    }
+
+    function font(size, weight = 400, family = "Arial, Helvetica, sans-serif") {
+      return `${weight} ${size}px ${family}`;
+    }
+
+    function drawCenteredText(text, y, size, weight = 800, color = "#333") {
+      ctx.save();
+      ctx.font = font(size, weight, "Arial, Helvetica, sans-serif");
+      ctx.fillStyle = color;
+      ctx.textAlign = "center";
+      ctx.textBaseline = "top";
+      ctx.fillText(text, canvas.width / 2, y);
+      ctx.restore();
+    }
+
+    function dottedLine(x1, y, x2) {
+      ctx.save();
+      ctx.strokeStyle = "#515151";
+      ctx.lineWidth = 3;
+      ctx.setLineDash([5, 8]);
+      ctx.beginPath();
+      ctx.moveTo(x1, y);
+      ctx.lineTo(x2, y);
+      ctx.stroke();
+      ctx.restore();
+    }
+
+    function drawLabelLine(label, value, y, lineStart, lineEnd, valueX, handSize = 55) {
+      ctx.save();
+      ctx.font = font(48, 800, "Arial, Helvetica, sans-serif");
+      ctx.fillStyle = "#4a4a4a";
+      ctx.textAlign = "left";
+      ctx.textBaseline = "alphabetic";
+      ctx.fillText(label, 95, y);
+      dottedLine(lineStart, y + 8, lineEnd);
+      if (value) drawHandText(value, valueX, y + 3, handSize);
+      ctx.restore();
+    }
+
+    function drawHandText(text, x, y, size = 50) {
+      ctx.save();
+      ctx.font = `italic ${size}px "Segoe Print", "Comic Sans MS", "Bradley Hand", cursive`;
+      ctx.fillStyle = "#1f2f87";
+      ctx.textAlign = "left";
+      ctx.textBaseline = "alphabetic";
+      ctx.fillText(text, x, y);
+      ctx.restore();
+    }
+
+    function drawCheckbox(x, y, checked) {
+      ctx.save();
+      ctx.strokeStyle = "#777";
+      ctx.lineWidth = 3;
+      ctx.strokeRect(x, y, 38, 38);
+      if (checked) {
+        ctx.strokeStyle = "#1f2f87";
+        ctx.lineWidth = 6;
+        ctx.beginPath();
+        ctx.moveTo(x + 7, y + 7);
+        ctx.lineTo(x + 31, y + 31);
+        ctx.moveTo(x + 31, y + 7);
+        ctx.lineTo(x + 7, y + 31);
+        ctx.stroke();
+      }
+      ctx.restore();
+    }
+
+    function wrapText(text, x, y, maxWidth, lineHeight, options = {}) {
+      const words = text.split(" ");
+      let line = "";
+      let yy = y;
+      ctx.save();
+      ctx.font = options.font || font(37, 400, "Arial, Helvetica, sans-serif");
+      ctx.fillStyle = options.color || "#333";
+      ctx.textAlign = options.align || "left";
+      ctx.textBaseline = "top";
+      for (let n = 0; n < words.length; n++) {
+        const testLine = line + words[n] + " ";
+        const metrics = ctx.measureText(testLine);
+        if (metrics.width > maxWidth && n > 0) {
+          ctx.fillText(line.trim(), x, yy);
+          line = words[n] + " ";
+          yy += lineHeight;
+        } else {
+          line = testLine;
+        }
+      }
+      ctx.fillText(line.trim(), x, yy);
+      ctx.restore();
+      return yy + lineHeight;
+    }
+
+    function renderCanvas() {
+      const d = dataFormulario();
+      limpiarCanvas();
+
+      drawCenteredText("ASIGNACIÓN PARA LA REUNIÓN", 75, 50, 900, "#343434");
+      drawCenteredText("VIDA Y MINISTERIO CRISTIANOS", 138, 50, 900, "#343434");
+
+      drawLabelLine("Nombre:", d.nombre || "Nombre Apellido", 250, 350, 980, 365);
+      drawLabelLine("Ayudante:", d.ayudante, 355, 350, 980, 365);
+      drawLabelLine("Fecha:", d.fecha || obtenerProximosJueves(1)[0], 460, 260, 980, 270, 34);
+      drawLabelLine("Intervención núm.:", d.intervencion || "6", 565, 555, 980, 570);
+
+      ctx.save();
+      ctx.font = font(48, 800, "Arial, Helvetica, sans-serif");
+      ctx.fillStyle = "#4a4a4a";
+      ctx.fillText("Se presentará en:", 95, 735);
+      ctx.restore();
+
+      const opciones = [
+        { key: "principal", text: "Sala principal" },
+        { key: "aux1", text: "Sala auxiliar núm. 1" },
+        { key: "aux2", text: "Sala auxiliar núm. 2" }
+      ];
+
+      let yy = 800;
+      opciones.forEach(op => {
+        drawCheckbox(150, yy - 32, d.sala === op.key);
+        ctx.save();
+        ctx.font = font(45, 400, "Arial, Helvetica, sans-serif");
+        ctx.fillStyle = "#555";
+        ctx.textBaseline = "alphabetic";
+        ctx.fillText(op.text, 220, yy);
+        ctx.restore();
+        yy += 65;
+      });
+
+      ctx.save();
+      ctx.font = font(39, 400, "Arial, Helvetica, sans-serif");
+      ctx.fillStyle = "#333";
+      ctx.textBaseline = "top";
+      ctx.font = font(40, 800, "Arial, Helvetica, sans-serif");
+      ctx.fillText("Nota al estudiante:", 95, 1078);
+      ctx.restore();
+
+      ctx.save();
+      ctx.font = font(39, 400, "Arial, Helvetica, sans-serif");
+      ctx.fillStyle = "#333";
+      const note = "En la Guía de actividades encontrará la información que necesita para su intervención. Repase también las indicaciones que se describen en las Instrucciones para la reunión Vida y Ministerio Cristianos (S-38).";
+      wrapText(note, 95, 1127, 900, 51, { font: font(39, 400, "Arial, Helvetica, sans-serif"), color: "#333" });
+      ctx.restore();
+
+      ctx.save();
+      ctx.font = font(31, 400, "Arial, Helvetica, sans-serif");
+      ctx.fillStyle = "#6b6b6b";
+      ctx.fillText("S-89-S   11/23", 95, 1388);
+      ctx.textAlign = "right";
+      ctx.fillStyle = "#111";
+      ctx.fillText("Generado digitalmente", 980, 1388);
+      ctx.restore();
+    }
+
+    function nombreArchivo() {
+      const d = dataFormulario();
+      const nombreSeguro = (d.nombre || "asignacion")
+        .normalize("NFD")
+        .replace(/[̀-ͯ]/g, "")
+        .replace(/[^a-zA-Z0-9]+/g, "_")
+        .replace(/^_+|_+$/g, "")
+        .toLowerCase();
+      const fechaSegura = (d.fecha || "fecha")
+        .normalize("NFD")
+        .replace(/[̀-ͯ]/g, "")
+        .replace(/[^a-zA-Z0-9]+/g, "_")
+        .replace(/^_+|_+$/g, "")
+        .toLowerCase();
+      return `asignacion_${nombreSeguro}_${fechaSegura}.png`;
+    }
+
+    function descargarImagen() {
+      const error = validar();
+      if (error) {
+        mostrarError(error);
+        return;
+      }
+      mostrarError("");
+      renderCanvas();
+      const a = document.createElement("a");
+      a.href = canvas.toDataURL("image/png", 1);
+      a.download = nombreArchivo();
+      document.body.appendChild(a);
+      a.click();
+      a.remove();
+      mostrarToast("Imagen PNG generada. En celular, revisá Descargas o Galería/Archivos para enviarla por WhatsApp.");
+    }
+
+    function canvasToBlob() {
+      return new Promise(resolve => canvas.toBlob(resolve, "image/png", 1));
+    }
+
+    async function compartirImagen() {
+      const error = validar();
+      if (error) {
+        mostrarError(error);
+        return;
+      }
+      mostrarError("");
+      renderCanvas();
+      const blob = await canvasToBlob();
+      const file = new File([blob], nombreArchivo(), { type: "image/png" });
+
+      if (navigator.canShare && navigator.canShare({ files: [file] })) {
+        try {
+          await navigator.share({
+            title: "Asignación",
+            text: "Asignación",
+            files: [file]
+          });
+          return;
+        } catch (e) {
+          if (e && e.name === "AbortError") return;
+        }
+      }
+
+      descargarImagen();
+    }
+
+    [nombre, ayudante, fecha, intervencion].forEach(el => {
+      el.addEventListener("input", renderCanvas);
+      el.addEventListener("change", renderCanvas);
+    });
+
+    document.getElementById("salas").addEventListener("change", renderCanvas);
+    document.getElementById("btnFinalizar").addEventListener("click", descargarImagen);
+    document.getElementById("btnCompartir").addEventListener("click", compartirImagen);
+
+    document.getElementById("btnLimpiar").addEventListener("click", () => {
+      form.reset();
+      renderFechas();
+      document.querySelector('input[name="sala"][value="principal"]').checked = true;
+      intervencion.value = "6";
+      mostrarError("");
+      renderCanvas();
+    });
+
+    window.addEventListener("load", () => {
+      renderFechas();
+      intervencion.value = "6";
+      renderCanvas();
+    });
+  </script>
+</body>
+</html>
